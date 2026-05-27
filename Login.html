@@ -146,7 +146,7 @@
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 380px;
+    max-width: 416px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -161,12 +161,12 @@
     width: 100%;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 32px;
+    border-radius: 16px;
+    padding: 32px 30px 36px;
     box-shadow: var(--card-shadow);
   }
   .iorys-card__title {
-    margin: 0 0 24px;
+    margin: 0 0 20px;
     font: 600 22px/28px var(--font-sans);
     letter-spacing: -0.01em;
     color: var(--text-1);
@@ -194,13 +194,34 @@
     align-items: baseline;
   }
   .iorys-pw-head .iorys-field-label { margin-bottom: 7px; }
+  .iorys-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin: 2px 0 16px;
+    color: var(--text-2);
+    font: 500 12px/16px var(--font-sans);
+  }
+  .iorys-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+  .iorys-check input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: var(--accent);
+  }
 
   .iorys-field {
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 48px;
-    padding: 0 14px;
+    height: 42px;
+    padding: 0 13px;
     background: var(--field-bg);
     border: 1px solid var(--field-border);
     border-radius: 8px;
@@ -274,7 +295,7 @@
   /* ─── Button ────────────────────────────────────────────────── */
   .iorys-btn {
     width: 100%;
-    height: 48px;
+    height: 44px;
     background: var(--accent);
     color: #FFFFFF;
     border: 0;
@@ -312,14 +333,6 @@
   }
   @keyframes iorys-spin { to { transform: rotate(360deg); } }
 
-  /* ─── Signup row ────────────────────────────────────────────── */
-  .iorys-signup {
-    margin-top: 20px;
-    padding-top: 18px;
-    border-top: 1px solid var(--divider);
-    text-align: center;
-  }
-
   /* ─── Footer ────────────────────────────────────────────────── */
   .iorys-foot {
     margin-top: 24px;
@@ -341,9 +354,9 @@
   /* ─── Small screens ──────────────────────────────────────────── */
   @media (max-width: 480px) {
     .iorys-page { padding: 32px 16px; }
-    .iorys-card { padding: 24px; border-radius: 12px; }
+    .iorys-card { padding: 28px 22px 24px; border-radius: 16px; }
     .iorys-brand { margin-bottom: 20px; }
-    .iorys-shell { max-width: 360px; }
+    .iorys-shell { max-width: 320px; }
   }
 </style>
 </head>
@@ -354,7 +367,8 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="login.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx?v=20260527-15"></script>
+<script type="text/babel" src="backgrounds.jsx?v=20260527-15"></script>
+<script type="text/babel" src="login.jsx?v=20260527-15"></script>
 </body>
 </html>

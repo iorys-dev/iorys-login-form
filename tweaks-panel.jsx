@@ -161,6 +161,16 @@ const __TWEAKS_STYLE = `
 // (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
 function useTweaks(defaults) {
   const [values, setValues] = React.useState(defaults);
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      if (e?.data?.type === 'sync_login_tweaks' && e.data.edits) {
+        setValues((prev) => ({ ...prev, ...e.data.edits }));
+        window.dispatchEvent(new CustomEvent('tweakchange', { detail: e.data.edits }));
+      }
+    };
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
   // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
   // useState-style call doesn't write a "[object Object]" key into the persisted
   // JSON block.
@@ -168,6 +178,7 @@ function useTweaks(defaults) {
     const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
       ? keyOrEdits : { [keyOrEdits]: val };
     setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: 'login_tweaks_changed', edits }, '*');
     window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
     // Same-window signal so in-page listeners (deck-stage rail thumbnails)
     // can react — the parent message only reaches the host, not peers.

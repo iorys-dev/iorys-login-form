@@ -1,4 +1,4 @@
-/* global React, ReactDOM, useTweaks, TweaksPanel, TweakSection, TweakToggle, TweakRadio */
+/* global React, ReactDOM, useTweaks, TweaksPanel, TweakToggle, TweakRadio, TweakSelect, IorysBackground, BACKGROUND_OPTIONS, BACKGROUND_STYLE_OPTIONS */
 const { useState, useEffect, useMemo, useRef } = React;
 
 // ───────────────────────────────────────────────────────────────────
@@ -206,7 +206,15 @@ function EyeIcon({ open }) {
 // ───────────────────────────────────────────────────────────────────
 const PW_PLACEHOLDER = "••••••••••";
 
-function LoginCard({ showForgot, showSignup }) {
+function switchVersion(version, edits) {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "set_login_version", version, edits }, "*");
+    return;
+  }
+  window.location.href = version === "v2" ? "Login2.html" : "Login.html";
+}
+
+function LoginCard({ forgotPasswordPosition, staySignedIn }) {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -269,7 +277,7 @@ function LoginCard({ showForgot, showSignup }) {
 
       <div className="iorys-pw-head">
         <span className="iorys-field-label">Password</span>
-        {showForgot && (
+        {forgotPasswordPosition === "top" && (
           <a href="#" className="iorys-link" onClick={(e) => e.preventDefault()}>Forgot password?</a>
         )}
       </div>
@@ -293,17 +301,26 @@ function LoginCard({ showForgot, showSignup }) {
         {pwErr && <div className="iorys-field-err">{pwErr}</div>}
       </label>
 
+      {(staySignedIn || forgotPasswordPosition === "bottom") && (
+        <div className="iorys-actions">
+          {staySignedIn ? (
+            <label className="iorys-check">
+              <input type="checkbox" />
+              <span>Stay signed in</span>
+            </label>
+          ) : <span />}
+          {forgotPasswordPosition === "bottom" && (
+            <a href="#" className="iorys-link" onClick={(e) => e.preventDefault()}>Forgot password?</a>
+          )}
+        </div>
+      )}
+
       <button type="submit" className={"iorys-btn" + (loading ? " is-loading" : "")} disabled={loading || !email || !pw}>
         {loading ?
           <><span className="iorys-spinner" /> Signing in…</> :
           "Sign in"}
       </button>
 
-      {showSignup && (
-        <div className="iorys-signup">
-          <a href="#" className="iorys-link iorys-link--strong" onClick={(e) => e.preventDefault()}>Create an account</a>
-        </div>
-      )}
     </form>);
 
 }
@@ -312,32 +329,35 @@ function LoginCard({ showForgot, showSignup }) {
 // App
 // ───────────────────────────────────────────────────────────────────
 const DEFAULTS = /*EDITMODE-BEGIN*/{
-  "showForgot": true,
-  "showSignup": true,
-  "tone": "dark"
+  "forgotPasswordPosition": "bottom",
+  "staySignedIn": true,
+  "background": "mesh",
+  "backgroundStyle": "mist",
+  "tone": "light"
 } /*EDITMODE-END*/;
+const DARK_BACKGROUND_STYLES = ["graphite", "midnight"];
 
 function App() {
   const [t, setTweak] = useTweaks(DEFAULTS);
+  const useWhiteLogo = DARK_BACKGROUND_STYLES.includes(t.backgroundStyle);
 
   useEffect(() => {document.documentElement.dataset.tone = t.tone;}, [t.tone]);
 
   return (
     <div className="iorys-page">
-      <BgBlobs />
-      <BgMesh tone={t.tone} />
+      <IorysBackground variant={t.background} tone={t.tone} styleName={t.backgroundStyle} />
 
       <main className="iorys-shell">
         <div className="iorys-brand">
           <img
-            src={t.tone === "dark" ? "assets/logo-iorys-white.svg" : "assets/logo-iorys.svg"}
+            src={useWhiteLogo ? "assets/logo-iorys-white.svg" : "assets/logo-iorys.svg"}
             alt="iorys" width="76" height="44" />
           
         </div>
 
         <LoginCard
-          showForgot={t.showForgot}
-          showSignup={t.showSignup} />
+          forgotPasswordPosition={t.forgotPasswordPosition}
+          staySignedIn={t.staySignedIn} />
         
 
         <footer className="iorys-foot">
@@ -349,9 +369,37 @@ function App() {
         </footer>
       </main>
 
-      <TweaksPanel title="Tweaks" defaultOpen placement="top-right">
-        <TweakToggle label="Forgot password" value={t.showForgot} onChange={(v) => setTweak("showForgot", v)} />
-        <TweakToggle label="Create account" value={t.showSignup} onChange={(v) => setTweak("showSignup", v)} />
+      <TweaksPanel title="Tweaks" defaultOpen placement="bottom-right">
+        <TweakRadio
+          label="Version"
+          value="v1"
+          onChange={(version) => switchVersion(version, t)}
+          options={[
+          { value: "v1", label: "Login 1" },
+          { value: "v2", label: "Login 2" }]
+          } />
+        <TweakToggle label="Stay signed in" value={t.staySignedIn} onChange={(v) => setTweak("staySignedIn", v)} />
+        <TweakRadio
+          label="Forgot password"
+          value={t.forgotPasswordPosition}
+          onChange={(v) => setTweak("forgotPasswordPosition", v)}
+          options={[
+          { value: "none", label: "None" },
+          { value: "top", label: "Top" },
+          { value: "bottom", label: "Bottom" }]
+          } />
+        <TweakSelect
+          label="Background effect"
+          value={t.background}
+          onChange={(v) => setTweak("background", v)}
+          options={BACKGROUND_OPTIONS}
+        />
+        <TweakSelect
+          label="Background style"
+          value={t.backgroundStyle}
+          onChange={(v) => setTweak("backgroundStyle", v)}
+          options={BACKGROUND_STYLE_OPTIONS}
+        />
         <TweakRadio
           label="Tone"
           value={t.tone}
