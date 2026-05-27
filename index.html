@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-tone="dark">
+<html lang="en" data-tone="light">
 <head>
 <meta charset="utf-8">
 <title>iorys — Sign in</title>
@@ -7,7 +7,12 @@
 <link rel="stylesheet" href="colors_and_type.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; min-height: 100vh; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg,#f8fbff 0%,#e9f5ff 38%,#f4f7fb 72%,#edf2f7 100%);
+  }
   body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -69,7 +74,10 @@
     --logo-w: #FFFFFF;
   }
 
-  body { background: var(--page-bg); color: var(--text-1); }
+  body {
+    background: linear-gradient(135deg,#f8fbff 0%,#e9f5ff 38%,#f4f7fb 72%,#edf2f7 100%);
+    color: var(--text-1);
+  }
 
   /* ─── Page ──────────────────────────────────────────────────── */
   .iorys-page {
@@ -82,7 +90,7 @@
     overflow: hidden;
   }
   :root[data-tone="light"] .iorys-page {
-    background: #E8EBF0;
+    background: linear-gradient(135deg,#f8fbff 0%,#e9f5ff 38%,#f4f7fb 72%,#edf2f7 100%);
   }
   :root[data-tone="dark"] .iorys-page {
     background: #060B1F;
