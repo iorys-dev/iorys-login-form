@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>iorys — Sign in</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100vh; }
+  body {
+    font-family: var(--font-sans);
+    color: var(--fg1);
+    background: var(--bg-page);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #app { min-height: 100vh; }
+
+  /* ── Page ────────────────────────────────────────────────────── */
+  .iorys-page {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    overflow: hidden;
+  }
+  .iorys-page--light {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, #FFFFFF 0%, transparent 70%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, #ECEEF3 0%, transparent 70%),
+      var(--bg-page);
+  }
+  .iorys-page--dark {
+    --fg1: #FFFFFF;
+    --fg2: #9AA3B2;
+    --fg3: #6B7280;
+    --bg-card: #0B132A;
+    --divider: #1A2342;
+    --border: #1F2A4D;
+    color: #FFFFFF;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, #0E1733 0%, transparent 70%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, #050B1F 0%, transparent 70%),
+      #060B1C;
+  }
+  .iorys-page--dark .iorys-bg { opacity: 0.5; }
+  .iorys-page--dark .iorys-bg [stroke="#002060"] { stroke: #52EAC8 !important; }
+  .iorys-page--dark .iorys-bg [fill="#002060"] { fill: #52EAC8 !important; }
+
+  /* ── Background pattern layer ───────────────────────────────── */
+  .iorys-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Shell ──────────────────────────────────────────────────── */
+  .iorys-shell {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .iorys-brand {
+    margin-bottom: 32px;
+    display: inline-flex;
+  }
+
+  /* ── Card ───────────────────────────────────────────────────── */
+  .iorys-login-card {
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow:
+      0 1px 2px rgba(0, 3, 31, 0.04),
+      0 8px 32px rgba(0, 3, 31, 0.08),
+      0 24px 64px rgba(0, 3, 31, 0.04);
+  }
+  .iorys-page--dark .iorys-login-card {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.3),
+      0 12px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  /* dark form-field overrides */
+  .iorys-page--dark .iorys-login-card input {
+    color: #FFFFFF !important;
+  }
+  .iorys-page--dark .iorys-login-card input::placeholder {
+    color: #5B6680;
+  }
+
+  input::placeholder { color: var(--fg3); }
+  input { font-family: var(--font-sans); }
+
+  /* ── Spinner ─────────────────────────────────────────────────── */
+  .iorys-spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: iorys-spin .8s linear infinite;
+    display: inline-block;
+  }
+  @keyframes iorys-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Footer ──────────────────────────────────────────────────── */
+  .iorys-foot {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font: var(--t-xs);
+    color: var(--fg2);
+  }
+  .iorys-foot a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .12s ease;
+  }
+  .iorys-foot a:hover { color: var(--fg1); }
+  .iorys-foot__sep { opacity: 0.5; }
+
+  /* ── Small screens ───────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .iorys-page { padding: 32px 16px; }
+    .iorys-login-card { padding: 28px 24px; border-radius: 10px; }
+    .iorys-brand { margin-bottom: 24px; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="login.jsx"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+/* iorys ledger portal — colors & type tokens
+   Sourced from /2024-design-system/Colors and /2026-in-progress.
+   Brand identity is a fintech ledger UI: navy + green accent on cool greys. */
+
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter-VariableFont.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter-Italic-VariableFont.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&display=swap");
+
+:root {
+  /* ── Base palette — Accent (brand green) ───────────────────────── */
+  --iorys-accent:        #16BF99;   /* primary CTA / brand */
+  --iorys-accent-dark:   #12997B;   /* hover / pressed */
+  --iorys-accent-light:  #52EAC8;   /* logo triangle, soft fills */
+  --iorys-accent-soft:   #D6F8EE;   /* tinted backgrounds */
+
+  /* ── Navy / dark text ──────────────────────────────────────────── */
+  --iorys-navy:          #002060;   /* primary text + nav links */
+  --iorys-navy-pop:      #002060;
+  --iorys-navy-deep:     #030142;
+  --iorys-logo-navy:     #011757;   /* logo wordmark */
+  --iorys-ink:           #000817;   /* near-black text */
+
+  /* ── Greys ─────────────────────────────────────────────────────── */
+  --iorys-grey-00:       #000817;   /* button dark */
+  --iorys-grey-01:       #969799;   /* secondary text, muted labels */
+  --iorys-grey-02:       #C8C9CC;   /* hairline / disabled stroke */
+  --iorys-grey:          #DCDFE5;   /* default border */
+  --iorys-grey-l1:       #EDEFF2;   /* dividers / subtle bg */
+  --iorys-grey-l2:       #F5F6F9;   /* page background */
+  --iorys-grey-l3:       #FAFBFC;   /* lightest fill */
+  --iorys-white:         #FFFFFF;
+
+  /* ── Semantic ──────────────────────────────────────────────────── */
+  --iorys-error:         #C3212C;   /* canonical brand red */
+  --iorys-error-500:     #F04438;
+  --iorys-error-300:     #FDA29B;
+  --iorys-error-100:     #FEE4E2;
+  --iorys-error-50:      #FEF3F2;
+
+  --iorys-warn-700:      #B54708;
+  --iorys-warn-500:      #F79009;
+  --iorys-warn-100:      #FEF0C7;
+  --iorys-warn-yellow:   #E2900F;
+
+  --iorys-ok-700:        #027A48;
+  --iorys-ok-500:        #12B76A;
+  --iorys-ok-100:        #D1FADF;
+  --iorys-ok-50:         #ECFDF3;
+
+  /* ── Foreground / background semantic aliases ──────────────────── */
+  --fg1: var(--iorys-navy);          /* primary text */
+  --fg2: var(--iorys-grey-01);       /* secondary text */
+  --fg3: var(--iorys-grey-02);       /* tertiary / placeholder */
+  --fg-on-accent: #FFFFFF;
+  --fg-on-dark: #FFFFFF;
+  --fg-link: var(--iorys-navy);
+
+  --bg-page:   var(--iorys-grey-l2); /* canonical app bg */
+  --bg-card:   #FFFFFF;
+  --bg-soft:   var(--iorys-grey-l1);
+  --bg-hover:  var(--iorys-grey-l1);
+
+  --border:        var(--iorys-grey);
+  --border-strong: var(--iorys-grey-02);
+  --divider:       var(--iorys-grey-l1);
+
+  /* ── Type ──────────────────────────────────────────────────────── */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-accent: "Montserrat", "Inter", sans-serif; /* used for some labels/marketing */
+
+  /* ── Radius — corners are notably soft, never large ────────────── */
+  --radius-xs: 2px;   /* checkboxes */
+  --radius-sm: 4px;
+  --radius:    8px;   /* cards, buttons, inputs */
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ── Shadow — subtle, single-layer, neutral grey ───────────────── */
+  --shadow-xs:  0 1px 2px rgba(10, 13, 18, 0.05);
+  --shadow-sm:  0 2px 8px rgba(0, 3, 31, 0.06);
+  --shadow:     0 4px 16px rgba(0, 3, 31, 0.08);
+  --shadow-lg:  0 12px 32px rgba(0, 3, 31, 0.12);
+
+  /* ── Spacing scale (4-based) ──────────────────────────────────── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* ── Type ramp — most copy is 14/16, headings are short numerics
+        so size jumps are gentle.  Inter is the only ramp font. ──── */
+  --t-display:    700 32px/40px var(--font-display);
+  --t-h1:         700 28px/36px var(--font-display);
+  --t-h2:         700 22px/28px var(--font-display);
+  --t-h3:         700 20px/28px var(--font-display);
+  --t-h4:         700 16px/24px var(--font-display);
+  --t-balance:    700 80px/88px var(--font-display); /* the giant balance numbers */
+  --t-balance-md: 700 28px/36px var(--font-display);
+  --t-body:       400 16px/24px var(--font-sans);
+  --t-body-strong:600 16px/24px var(--font-sans);
+  --t-sm:         400 14px/20px var(--font-sans);
+  --t-sm-strong:  600 14px/20px var(--font-sans);
+  --t-xs:         400 12px/16px var(--font-sans);
+  --t-xs-strong:  600 12px/16px var(--font-sans);
+  --t-tiny:       400 10px/14px var(--font-sans);
+  --t-button:     500 16px/24px var(--font-sans);
+  --t-label:      500 14px/20px var(--font-sans);
+  --t-link:       500 16px/24px var(--font-sans);
+
+  /* Letter spacing — small caps labels use +0.02–0.03em */
+  --ls-caps: 0.030em;
+  --ls-label: 0.020em;
+}
+
+/* ── Semantic element tokens ──────────────────────────────────── */
+.iorys-h1 { font: var(--t-h1); color: var(--fg1); letter-spacing: -0.01em; }
+.iorys-h2 { font: var(--t-h2); color: var(--fg1); }
+.iorys-h3 { font: var(--t-h3); color: var(--fg1); }
+.iorys-h4 { font: var(--t-h4); color: var(--fg1); }
+.iorys-body { font: var(--t-body); color: var(--fg1); }
+.iorys-sm { font: var(--t-sm); color: var(--fg1); }
+.iorys-muted { color: var(--fg2); }
+.iorys-balance { font: var(--t-balance); color: var(--fg1); letter-spacing: -0.02em; }
+.iorys-label-caps {
+  font: var(--t-tiny);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-caps);
+  color: var(--fg2);
+}
