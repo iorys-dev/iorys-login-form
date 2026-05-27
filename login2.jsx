@@ -2,8 +2,7 @@
 const { useState, useEffect } = React;
 
 const DEFAULTS = /*EDITMODE-BEGIN*/{
-  "forgotPasswordPosition": "bottom",
-  "staySignedIn": true,
+  "system": "HUB",
   "background": "still",
   "backgroundStyle": "mist",
   "tone": "light"
@@ -31,7 +30,7 @@ function Brand({ tone, backgroundStyle }) {
   );
 }
 
-function LoginCard({ forgotPasswordPosition, staySignedIn }) {
+function LoginCard({ systemName }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailFocus, setEmailFocus] = useState(false);
@@ -76,8 +75,8 @@ function LoginCard({ forgotPasswordPosition, staySignedIn }) {
 
   return (
     <form className="v2-card" onSubmit={submit} noValidate>
-      <h1 className="v2-title">Welcome back</h1>
-      <p className="v2-subtitle">Sign in to continue to your dashboard.</p>
+      <h1 className="v2-title">Sign in to {systemName}</h1>
+      <p className="v2-subtitle">Use your iorys account to continue.</p>
 
       {bannerErr && <div className="v2-error" role="alert">{bannerErr}</div>}
 
@@ -103,9 +102,6 @@ function LoginCard({ forgotPasswordPosition, staySignedIn }) {
       <label className="v2-field-wrap" htmlFor="v2-password">
         <div className="v2-field-head">
           <span className="v2-label">Password</span>
-          {forgotPasswordPosition === "top" && (
-            <a className="v2-link" href="#" onClick={(event) => event.preventDefault()}>Forgot password?</a>
-          )}
         </div>
         <span className={"v2-field" + (passwordFocus ? " is-focus" : "") + (passwordErr ? " is-error" : "")}>
           <input
@@ -123,20 +119,6 @@ function LoginCard({ forgotPasswordPosition, staySignedIn }) {
         </span>
         {passwordErr && <div className="v2-field-err">{passwordErr}</div>}
       </label>
-
-      {(staySignedIn || forgotPasswordPosition === "bottom") && (
-        <div className="v2-actions">
-          {staySignedIn ? (
-            <label className="v2-check">
-              <input type="checkbox" />
-              <span>Stay signed in</span>
-            </label>
-          ) : <span />}
-          {forgotPasswordPosition === "bottom" && (
-            <a className="v2-link" href="#" onClick={(event) => event.preventDefault()}>Forgot password?</a>
-          )}
-        </div>
-      )}
 
       <button className="v2-btn" type="submit" disabled={loading || !email || !password}>
         {loading && <span className="v2-spinner" />}
@@ -160,18 +142,10 @@ function App() {
       <Brand tone={t.tone} backgroundStyle={t.backgroundStyle} />
 
       <main className="v2-shell">
-        <LoginCard
-          forgotPasswordPosition={t.forgotPasswordPosition}
-          staySignedIn={t.staySignedIn} />
-      </main>
+        <LoginCard systemName={t.system || "HUB"} />
 
-      <footer className="v2-footer">
-        <a href="#" onClick={(event) => event.preventDefault()}>Terms and Conditions</a>
-        <span>·</span>
-        <a href="#" onClick={(event) => event.preventDefault()}>Privacy Policy</a>
-        <span>·</span>
-        <span>© 2026 Iorys Ltd.</span>
-      </footer>
+        <footer className="v2-footer">© 2026 Iorys Ltd.</footer>
+      </main>
 
       <TweaksPanel title="Tweaks" defaultOpen placement="bottom-right">
         <TweakRadio
@@ -183,15 +157,14 @@ function App() {
             { value: "v2", label: "Login 2" },
           ]}
         />
-        <TweakToggle label="Stay signed in" value={t.staySignedIn} onChange={(value) => setTweak("staySignedIn", value)} />
         <TweakRadio
-          label="Forgot password"
-          value={t.forgotPasswordPosition}
-          onChange={(value) => setTweak("forgotPasswordPosition", value)}
+          label="System"
+          value={t.system || "HUB"}
+          onChange={(value) => setTweak("system", value)}
           options={[
-            { value: "none", label: "None" },
-            { value: "top", label: "Top" },
-            { value: "bottom", label: "Bottom" },
+            { value: "HUB", label: "HUB" },
+            { value: "Ledger", label: "Ledger" },
+            { value: "Connect", label: "Connect" },
           ]}
         />
         <TweakSelect

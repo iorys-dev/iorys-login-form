@@ -1,4 +1,4 @@
-/* global React, ReactDOM, useTweaks, TweaksPanel, TweakToggle, TweakRadio, TweakSelect, IorysBackground, BACKGROUND_OPTIONS, BACKGROUND_STYLE_OPTIONS */
+/* global React, ReactDOM, IorysBackground */
 const { useState, useEffect, useMemo, useRef } = React;
 
 // ───────────────────────────────────────────────────────────────────
@@ -206,15 +206,7 @@ function EyeIcon({ open }) {
 // ───────────────────────────────────────────────────────────────────
 const PW_PLACEHOLDER = "••••••••••";
 
-function switchVersion(version, edits) {
-  if (window.parent && window.parent !== window) {
-    window.parent.postMessage({ type: "set_login_version", version, edits }, "*");
-    return;
-  }
-  window.location.href = version === "v2" ? "Login2.html" : "Login.html";
-}
-
-function LoginCard({ forgotPasswordPosition, staySignedIn }) {
+function LoginCard({ systemName }) {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -253,7 +245,7 @@ function LoginCard({ forgotPasswordPosition, staySignedIn }) {
 
   return (
     <form className="iorys-card" onSubmit={submit} noValidate>
-      <h1 className="iorys-card__title">Sign in</h1>
+      <h1 className="iorys-card__title">Sign in to {systemName}</h1>
 
       {bannerErr && (
         <div className="iorys-err" role="alert">{bannerErr}</div>
@@ -277,9 +269,6 @@ function LoginCard({ forgotPasswordPosition, staySignedIn }) {
 
       <div className="iorys-pw-head">
         <span className="iorys-field-label">Password</span>
-        {forgotPasswordPosition === "top" && (
-          <a href="#" className="iorys-link" onClick={(e) => e.preventDefault()}>Forgot password?</a>
-        )}
       </div>
       <label htmlFor="pw" className="iorys-field-wrap iorys-field-wrap--nolabel">
         <span className={"iorys-field" + (pwFocus ? " is-focus" : "") + (pwErr ? " is-error" : "")}>
@@ -301,20 +290,6 @@ function LoginCard({ forgotPasswordPosition, staySignedIn }) {
         {pwErr && <div className="iorys-field-err">{pwErr}</div>}
       </label>
 
-      {(staySignedIn || forgotPasswordPosition === "bottom") && (
-        <div className="iorys-actions">
-          {staySignedIn ? (
-            <label className="iorys-check">
-              <input type="checkbox" />
-              <span>Stay signed in</span>
-            </label>
-          ) : <span />}
-          {forgotPasswordPosition === "bottom" && (
-            <a href="#" className="iorys-link" onClick={(e) => e.preventDefault()}>Forgot password?</a>
-          )}
-        </div>
-      )}
-
       <button type="submit" className={"iorys-btn" + (loading ? " is-loading" : "")} disabled={loading || !email || !pw}>
         {loading ?
           <><span className="iorys-spinner" /> Signing in…</> :
@@ -329,8 +304,7 @@ function LoginCard({ forgotPasswordPosition, staySignedIn }) {
 // App
 // ───────────────────────────────────────────────────────────────────
 const DEFAULTS = /*EDITMODE-BEGIN*/{
-  "forgotPasswordPosition": "bottom",
-  "staySignedIn": true,
+  "system": "Ledger",
   "background": "mesh",
   "backgroundStyle": "mist",
   "tone": "light"
@@ -338,10 +312,16 @@ const DEFAULTS = /*EDITMODE-BEGIN*/{
 const DARK_BACKGROUND_STYLES = ["graphite", "midnight"];
 
 function App() {
-  const [t, setTweak] = useTweaks(DEFAULTS);
+  const [system, setSystem] = useState(() => systemFromHash());
+  const t = { ...DEFAULTS, system };
   const useWhiteLogo = DARK_BACKGROUND_STYLES.includes(t.backgroundStyle);
 
   useEffect(() => {document.documentElement.dataset.tone = t.tone;}, [t.tone]);
+  useEffect(() => {
+    const onHashChange = () => setSystem(systemFromHash());
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
   return (
     <div className="iorys-page">
@@ -355,62 +335,19 @@ function App() {
           
         </div>
 
-        <LoginCard
-          forgotPasswordPosition={t.forgotPasswordPosition}
-          staySignedIn={t.staySignedIn} />
-        
+        <LoginCard systemName={t.system || "HUB"} />
 
-        <footer className="iorys-foot">
-          <a href="#" onClick={(e) => e.preventDefault()}>Terms and Conditions</a>
-          <span className="iorys-foot__sep">·</span>
-          <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>
-          <span className="iorys-foot__sep">·</span>
-          <span>© 2026 Iorys Ltd.</span>
-        </footer>
+        <footer className="iorys-foot">© 2026 Iorys Ltd.</footer>
       </main>
-
-      <TweaksPanel title="Tweaks" defaultOpen placement="bottom-right">
-        <TweakRadio
-          label="Version"
-          value="v1"
-          onChange={(version) => switchVersion(version, t)}
-          options={[
-          { value: "v1", label: "Login 1" },
-          { value: "v2", label: "Login 2" }]
-          } />
-        <TweakToggle label="Stay signed in" value={t.staySignedIn} onChange={(v) => setTweak("staySignedIn", v)} />
-        <TweakRadio
-          label="Forgot password"
-          value={t.forgotPasswordPosition}
-          onChange={(v) => setTweak("forgotPasswordPosition", v)}
-          options={[
-          { value: "none", label: "None" },
-          { value: "top", label: "Top" },
-          { value: "bottom", label: "Bottom" }]
-          } />
-        <TweakSelect
-          label="Background effect"
-          value={t.background}
-          onChange={(v) => setTweak("background", v)}
-          options={BACKGROUND_OPTIONS}
-        />
-        <TweakSelect
-          label="Background style"
-          value={t.backgroundStyle}
-          onChange={(v) => setTweak("backgroundStyle", v)}
-          options={BACKGROUND_STYLE_OPTIONS}
-        />
-        <TweakRadio
-          label="Tone"
-          value={t.tone}
-          onChange={(v) => setTweak("tone", v)}
-          options={[
-          { value: "dark", label: "Dark" },
-          { value: "light", label: "Light" }]
-          } />
-      </TweaksPanel>
     </div>);
 
+}
+
+function systemFromHash(hash = window.location.hash) {
+  const key = hash.replace("#", "").toLowerCase();
+  if (key === "hub") return "HUB";
+  if (key === "connect") return "Connect";
+  return "Ledger";
 }
 
 ReactDOM.createRoot(document.getElementById("app")).render(<App />);
