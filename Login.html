@@ -162,8 +162,60 @@
   .iorys-brand {
     margin-bottom: 28px;
     display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 58px;
+    max-width: min(92vw, 520px);
+    white-space: nowrap;
   }
-
+  .iorys-client-stage {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    overflow: visible;
+  }
+  .iorys-client-logo {
+    display: block;
+    flex: none;
+    height: auto;
+    max-height: 58px;
+    object-fit: contain;
+    object-position: center;
+  }
+  .iorys-client-logo--iorys {
+    width: 83px;
+    height: 48px;
+  }
+  .iorys-client-logo--stefa {
+    width: 230px;
+    height: auto;
+    max-height: 56px;
+  }
+  .iorys-client-logo--maayan {
+    width: 153px;
+    height: 40px;
+  }
+  .iorys-brand__divider {
+    width: 1px;
+    height: 30px;
+    border-radius: 1px;
+    background: rgba(3, 0, 69, 0.22);
+  }
+  .iorys-product-mark {
+    min-width: 82px;
+    color: #172A5E;
+    font: 750 24px/28px var(--font-sans);
+    letter-spacing: -0.02em;
+    transform: translateY(1px);
+  }
+  :root[data-tone="dark"] .iorys-brand__divider {
+    background: rgba(255, 255, 255, 0.28);
+  }
+  :root[data-tone="dark"] .iorys-product-mark {
+    color: #EAF1FF;
+  }
   /* ─── Card ──────────────────────────────────────────────────── */
   .iorys-card {
     width: 100%;
@@ -347,7 +399,7 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="backgrounds.jsx?v=20260527-24"></script>
-<script type="text/babel" src="login.jsx?v=20260527-24"></script>
+<script type="text/babel" src="backgrounds.jsx?v=20260527-42"></script>
+<script type="text/babel" src="login.jsx?v=20260527-42"></script>
 </body>
 </html>

@@ -206,7 +206,7 @@ function EyeIcon({ open }) {
 // ───────────────────────────────────────────────────────────────────
 const PW_PLACEHOLDER = "••••••••••";
 
-function LoginCard({ systemName }) {
+function LoginCard() {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -245,7 +245,7 @@ function LoginCard({ systemName }) {
 
   return (
     <form className="iorys-card" onSubmit={submit} noValidate>
-      <h1 className="iorys-card__title">Sign in to {systemName}</h1>
+      <h1 className="iorys-card__title">Sign in</h1>
 
       {bannerErr && (
         <div className="iorys-err" role="alert">{bannerErr}</div>
@@ -311,14 +311,67 @@ const DEFAULTS = /*EDITMODE-BEGIN*/{
 } /*EDITMODE-END*/;
 const DARK_BACKGROUND_STYLES = ["graphite", "midnight"];
 
+const CLIENT_LOGOS = {
+  stefa: {
+    src: "uploads/stefa-pay-logo-horizontal-v2-light.svg?v=20260527-42",
+    alt: "STEFA PAY",
+    width: 230,
+    height: 56
+  },
+  maayan: {
+    src: "uploads/maayan-logo.svg?v=20260527-42",
+    alt: "maayan",
+    width: 153,
+    height: 40
+  }
+};
+
+function BrandLogo({ client, useWhiteLogo }) {
+  const clientLogo = CLIENT_LOGOS[client];
+  if (clientLogo) {
+    return (
+      <img
+        className={`iorys-client-logo iorys-client-logo--${client}`}
+        src={clientLogo.src}
+        alt={clientLogo.alt}
+        width={clientLogo.width}
+        height={clientLogo.height}
+      />
+    );
+  }
+
+  return (
+    <img
+      className="iorys-client-logo iorys-client-logo--iorys"
+      src={useWhiteLogo ? "assets/logo-iorys-white.svg" : "assets/logo-iorys.svg"}
+      alt="iorys"
+      width="83"
+      height="48"
+    />
+  );
+}
+
+function BrandLockup({ systemName, client, useWhiteLogo }) {
+  const label = systemName || "Ledger";
+  return (
+    <div className="iorys-brand" data-client={client || "iorys"} data-system={label.toLowerCase()}>
+      <span className={"iorys-client-stage" + (client ? " has-client" : "")}>
+        <BrandLogo client={client} useWhiteLogo={useWhiteLogo} />
+      </span>
+      <span className="iorys-brand__divider" aria-hidden="true" />
+      <span className="iorys-product-mark">{label}</span>
+    </div>
+  );
+}
+
 function App() {
-  const [system, setSystem] = useState(() => systemFromHash());
-  const t = { ...DEFAULTS, system };
+  const [variant, setVariant] = useState(() => variantFromHash());
+  const t = { ...DEFAULTS, system: variant.system };
   const useWhiteLogo = DARK_BACKGROUND_STYLES.includes(t.backgroundStyle);
 
   useEffect(() => {document.documentElement.dataset.tone = t.tone;}, [t.tone]);
   useEffect(() => {
-    const onHashChange = () => setSystem(systemFromHash());
+    const onHashChange = () => setVariant(variantFromHash());
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
@@ -328,14 +381,9 @@ function App() {
       <IorysBackground variant={t.background} tone={t.tone} styleName={t.backgroundStyle} />
 
       <main className="iorys-shell">
-        <div className="iorys-brand">
-          <img
-            src={useWhiteLogo ? "assets/logo-iorys-white.svg" : "assets/logo-iorys.svg"}
-            alt="iorys" width="76" height="44" />
-          
-        </div>
+        <BrandLockup systemName={t.system} client={variant.client} useWhiteLogo={useWhiteLogo} />
 
-        <LoginCard systemName={t.system || "HUB"} />
+        <LoginCard />
 
         <footer className="iorys-foot">© 2026 Iorys Ltd.</footer>
       </main>
@@ -343,11 +391,23 @@ function App() {
 
 }
 
-function systemFromHash(hash = window.location.hash) {
-  const key = hash.replace("#", "").toLowerCase();
-  if (key === "hub") return "HUB";
-  if (key === "connect") return "Connect";
-  return "Ledger";
+function variantFromHash(hash = window.location.hash) {
+  const [productKey, clientKey] = hash.replace(/^#/, "").toLowerCase().split("-");
+  const products = {
+    hub: "HUB",
+    ledger: "Ledger",
+    connect: "Connect"
+  };
+  const clients = {
+    stefa: "stefa",
+    stefapay: "stefa",
+    mpay: "maayan",
+    maayan: "maayan"
+  };
+  return {
+    system: products[productKey] || "Ledger",
+    client: clients[clientKey] || null
+  };
 }
 
 ReactDOM.createRoot(document.getElementById("app")).render(<App />);
